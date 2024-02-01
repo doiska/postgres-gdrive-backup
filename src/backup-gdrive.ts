@@ -3,8 +3,11 @@ import { JWT } from "google-auth-library";
 import { env } from "./env";
 import { exec } from "child_process";
 import { unlink } from "fs/promises";
+import { statSync } from "fs";
 import * as path from "path";
 import * as os from "os";
+import { filesize } from "filesize";
+import { createReadStream } from "fs";
 
 const auth = new JWT({
     email: env.SERVICE_ACCOUNT.client_email,
@@ -20,10 +23,19 @@ const gdrive = drive({
 const dumpToFile = async (path: string) => {
     return new Promise((resolve, reject) => {
         exec(`pg_dump --dbname=${env.DATABASE_URL} --format=tar | gzip > ${path}`,
-            (err, stdout, stderr) => {
+            (err, stdout) => {
                 if (err) {
                     reject(err);
                 } else {
+
+                    console.log(`Backup file size: ${filesize(statSync(
+                        path
+                    ).size)}`);
+
+                    if (statSync(path).size === 0) {
+                        reject("Backup file is empty");
+                    }
+
                     resolve(stdout);
                 }
             }
@@ -49,7 +61,7 @@ const pushToDrive = async (filename: string, path: string) => {
 
     const media = {
         mimeType: "application/gzip",
-        body: path,
+        body: createReadStream(path)
     };
 
     await gdrive.files.create({

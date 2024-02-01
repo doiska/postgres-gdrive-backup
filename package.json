@@ -16,6 +16,7 @@
     "@googleapis/drive": "^8.6.0",
     "cron": "^3.1.6",
     "envalid": "^8.0.0",
+    "filesize": "^10.1.0",
     "google-auth-library": "^9.6.1"
   }
 }
