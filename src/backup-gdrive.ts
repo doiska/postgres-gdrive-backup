@@ -1,7 +1,7 @@
 import { drive } from "@googleapis/drive";
 import { JWT } from "google-auth-library";
 import { env } from "./env";
-import { exec } from "child_process";
+import { exec, execSync } from "child_process";
 import { unlink } from "fs/promises";
 import { statSync } from "fs";
 import * as path from "path";
@@ -23,21 +23,33 @@ const gdrive = drive({
 const dumpToFile = async (path: string) => {
     return new Promise((resolve, reject) => {
         exec(`pg_dump --dbname=${env.DATABASE_URL} --format=tar | gzip > ${path}`,
-            (err, stdout) => {
+            (err, stdout, stderr) => {
                 if (err) {
-                    reject(err);
-                } else {
-
-                    console.log(`Backup file size: ${filesize(statSync(
-                        path
-                    ).size)}`);
-
-                    if (statSync(path).size === 0) {
-                        reject("Backup file is empty");
-                    }
-
-                    resolve(stdout);
+                    reject({
+                        error: err,
+                        stderr: stderr.trimEnd(),
+                    });
+                    return;
                 }
+
+                if (!!stderr) {
+                    console.log({ stderr: stderr.trimEnd() });
+                }
+
+                const isFileValid = execSync(`gzip -cd ${path} | head -c1`).length > 0;
+
+                if(!isFileValid) {
+                    console.error("Backup file is empty");
+                    reject("Backup file is empty");
+                    return;
+                }
+
+                console.log(`Backup file size: ${filesize(statSync(path).size)}`);
+                console.log(`Backup file created at: ${path}`, {
+                    stdout: stdout.trimEnd(),
+                })
+
+                resolve(stdout);
             }
         );
     });
