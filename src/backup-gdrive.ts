@@ -33,7 +33,7 @@ const dumpToFile = async (path: string) => {
                 }
 
                 if (!!stderr) {
-                    console.log({ stderr: stderr.trimEnd() });
+                    console.log(stderr.trimEnd());
                 }
 
                 const isFileValid = execSync(`gzip -cd ${path} | head -c1`).length > 0;
@@ -45,9 +45,11 @@ const dumpToFile = async (path: string) => {
                 }
 
                 console.log(`Backup file size: ${filesize(statSync(path).size)}`);
-                console.log(`Backup file created at: ${path}`, {
-                    stdout: stdout.trimEnd(),
-                })
+                console.log(`Backup file created at: ${path}`)
+
+                if(stdout) {
+                    console.log(stdout);
+                }
 
                 resolve(stdout);
             }
