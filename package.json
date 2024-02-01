@@ -1,0 +1,21 @@
+{
+  "name": "railway-gdrive-pgsql",
+  "module": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.3.3"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@googleapis/drive": "^8.6.0",
+    "cron": "^3.1.6",
+    "envalid": "^8.0.0",
+    "googleapis": "^131.0.0"
+  }
+}
