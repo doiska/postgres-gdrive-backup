@@ -35,3 +35,5 @@ You can use ``.env.default`` as a template for your environment variables.
   - Example: `my-database-backup-`
   - Result: `my-database-backup-2024-02-01.sql.tar.gz`
 - `RUN_ON_START`: If set to `true`, the backup will run once when the app starts.
+
+Based on [railwayapp-templates/postgres-s3-backups](https://github.com/railwayapp-templates/postgres-s3-backups).

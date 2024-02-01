@@ -1,6 +1,6 @@
 import { CronJob } from "cron";
-import { env } from "./env.ts";
-import { run } from "./backup-gdrive.ts";
+import { env } from "./env";
+import { run } from "./backup-gdrive";
 
 const isUsingCron = env.CRON_EXPRESSION !== "-1";
 

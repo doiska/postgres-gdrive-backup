@@ -17,5 +17,5 @@ export const env = cleanEnv(process.env, {
     DATABASE_URL: str(),
     FOLDER_ID: str(),
     CRON_EXPRESSION: str({ default: '0 0 * * *' }),
-    RUN_ON_START: bool({ default: false })
+    RUN_ON_START: bool({ default: true })
 });

@@ -1,10 +1,10 @@
 import { drive } from "@googleapis/drive";
-import { google } from "googleapis";
-import { env } from "./env.ts";
+import { JWT } from "google-auth-library";
+import { env } from "./env";
 import { exec } from "child_process";
 import { unlink } from "fs/promises";
 
-const auth = new google.auth.JWT({
+const auth = new JWT({
     email: env.SERVICE_ACCOUNT.client_email,
     key: env.SERVICE_ACCOUNT.private_key,
     scopes: ["https://www.googleapis.com/auth/drive"],
