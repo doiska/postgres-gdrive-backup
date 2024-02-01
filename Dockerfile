@@ -20,5 +20,12 @@ COPY --from=build /root/node_modules ./node_modules
 COPY --from=build /root/dist ./dist
 
 RUN apk add --update --no-cache postgresql-client nodejs npm
+ARG PG_VERSION='16'
 
 ENTRYPOINT ["node", "dist/index.js"]
+RUN apk add --update --no-cache postgresql${PG_VERSION}-client --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
+    apk add --update --no-cache nodejs npm
+
+CMD pg_isready --dbname=$DATABASE_URL && \
+    pg_dump --version && \
+    node dist/index.js

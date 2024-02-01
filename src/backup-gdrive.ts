@@ -3,6 +3,8 @@ import { JWT } from "google-auth-library";
 import { env } from "./env";
 import { exec } from "child_process";
 import { unlink } from "fs/promises";
+import * as path from "path";
+import * as os from "os";
 
 const auth = new JWT({
     email: env.SERVICE_ACCOUNT.client_email,
@@ -17,7 +19,7 @@ const gdrive = drive({
 
 const dumpToFile = async (path: string) => {
     return new Promise((resolve, reject) => {
-        exec(`pg_dump ${env.DATABASE_URL} -F t | gzip > ${path}`,
+        exec(`pg_dump --dbname=${env.DATABASE_URL} --format=tar | gzip > ${path}`,
             (err, stdout, stderr) => {
                 if (err) {
                     reject(err);
@@ -61,7 +63,7 @@ export async function run() {
         const timestamp = new Date().toISOString().replace(/:/g, "-").replace(".", "-");
 
         const filename = `${env.FILE_PREFIX}${timestamp}.tar.gz`;
-        const filepath = `/tmp/${filename}`
+        const filepath = path.join(os.tmpdir(), filename);
 
         console.log(`Starting backup of ${filename}`);
 
