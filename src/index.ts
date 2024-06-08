@@ -1,4 +1,3 @@
-import "dotenv/config";
 import { CronJob } from "cron";
 import { env } from "./env";
 import { run } from "./backup-gdrive";
