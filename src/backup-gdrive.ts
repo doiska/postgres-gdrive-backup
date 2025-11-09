@@ -146,5 +146,6 @@ export async function run() {
     console.log("All done!");
   } catch (err) {
     console.error("Something went wrong:", err);
+    process.exit(1);
   }
 }

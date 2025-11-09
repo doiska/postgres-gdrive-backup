@@ -14,7 +14,7 @@ const main = async () => {
     console.error(
       "Missing required environment variables (FOLDER_ID, DATABASE_URL, SERVICE_ACCOUNT.PRIVATE_KEY, SERVICE_ACCOUNT.CLIENT_EMAIL), please check your Environment.",
     );
-    return;
+    process.exit(1);
   }
 
   if (!isUsingCron) {
@@ -38,4 +38,7 @@ const main = async () => {
   cron.start();
 };
 
-void main();
+main().catch((error) => {
+  console.error("Fatal error:", error);
+  process.exit(1);
+});
