@@ -21,6 +21,7 @@ WORKDIR /root
 COPY --from=build /root/node_modules ./node_modules
 COPY --from=build /root/dist ./dist
 
+# PostgreSQL version for client tools (can be overridden via --build-arg PG_VERSION=15)
 ARG PG_VERSION='16'
 
 RUN apk add --update --no-cache postgresql${PG_VERSION}-client --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main && \
